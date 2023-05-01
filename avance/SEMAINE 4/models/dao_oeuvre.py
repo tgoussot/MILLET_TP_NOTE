@@ -7,6 +7,19 @@ def find_oeuvres():
     try:
         cursor=connection.cursor()
         sql = ''' SELECT 'requete3_1' FROM DUAL '''
+        sql = '''
+        SELECT auteur.nom, oeuvre.titre, oeuvre.date_parution AS date_parution_iso, COALESCE(oeuvre.photo, '') as photo, COUNT(E1.id_exemplaire) AS nb_exemplaire,
+            COUNT(E2.id_exemplaire) AS nb_exemp_dispo, 
+            CONCAT(LPAD(CAST(DAY(oeuvre.date_parution) AS CHAR(2)), 2, '0'), '/', LPAD(CAST(MONTH(oeuvre.date_parution) AS CHAR(2)), 2, '0'), '/', YEAR(oeuvre.date_parution)) AS date_parution,
+            oeuvre.id_oeuvre
+        FROM oeuvre
+        INNER JOIN auteur ON oeuvre.auteur_id = auteur.id_auteur
+        LEFT JOIN exemplaire AS E1 ON oeuvre.id_oeuvre = E1.oeuvre_id
+        LEFT JOIN exemplaire AS E2 ON E2.id_exemplaire = E1.id_exemplaire 
+            AND E2.id_exemplaire NOT IN (SELECT emprunt.exemplaire_id FROM emprunt WHERE emprunt.date_retour IS NULL)    
+        GROUP BY auteur.nom, oeuvre.titre, oeuvre.date_parution, oeuvre.photo
+        ORDER BY auteur.nom, oeuvre.titre
+        '''
         cursor.execute(sql)
         return cursor.fetchall()
     except ValueError:
@@ -34,11 +47,15 @@ def find_one_oeuvre(id):
     try:
         cursor=connection.cursor()
         sql = ''' SELECT 'requete3_4' FROM DUAL '''
+        sql = '''
+        SELECT * 
+        FROM oeuvre
+        WHERE id_oeuvre = %s
+        '''
         cursor.execute(sql, (id))
         return cursor.fetchone()
     except ValueError:
         abort(400,'erreur requete 3_4')
-
 
 def oeuvre_insert(titre,dateParution,photo,idAuteur):
     connection = get_db()

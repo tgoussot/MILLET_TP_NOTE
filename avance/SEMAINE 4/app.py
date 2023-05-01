@@ -25,8 +25,6 @@ def close_connection(exception):
 def show_accueil():
     return render_template('admin/layout.html')
 
-
-
 app.register_blueprint(admin_auteur)
 app.register_blueprint(admin_adherent)
 app.register_blueprint(admin_oeuvre)

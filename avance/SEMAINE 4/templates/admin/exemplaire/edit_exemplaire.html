@@ -20,9 +20,9 @@
                 <input type="radio" name="etat" value="MAUVAIS" {% if exemplaire.etat == 'MAUVAIS' %} checked {% endif %}> MAUVAIS <br>
 
                 <label>Date Achat </label>
-                <input name="date_achat"  type="text"  size="18" value="{{ exemplaire.date_achat }}" >
-                {% if erreurs.date_achat is defined %}
-                    <small class="error">{{erreurs.date_achat}}</small>
+                <input name="dateAchat"  type="text"  size="18" value="{{ exemplaire.dateAchat }}" >
+                {% if erreurs.dateAchat is defined %}
+                    <small class="error">{{erreurs.dateAchat}}</small>
                 {% endif %}
 
                 <label>Prix </label>
@@ -30,8 +30,7 @@
 
                 {% if erreurs.prix is defined %}
                     <small class="error">{{erreurs.prix}}</small>
-                {% endif %}
-                <!-- champ caché avec l'id pour conserver la valeur de l'id lors de la validation !-->
+                {% endif %} 
 
                 <input type="submit" name="ModifierExemplaire" value="Modifier" />
 

@@ -5,7 +5,6 @@ from flask import *
 import datetime
 from models.dao_adherent import *
 from validator.validator_adherent_etu import *
-from connexion_db import get_db
 
 admin_adherent = Blueprint('admin_adherent', __name__,
                         template_folder='templates')
